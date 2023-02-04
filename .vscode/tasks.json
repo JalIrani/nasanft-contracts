@@ -25,9 +25,14 @@
             "command": "${workspaceFolder}/scripts/install ${input:installerDir}"
         },
         {
-            "label": "setupLocalDevNet",
+            "label": "connectToLocalNet",
             "type": "shell",
-            "command": "${workspaceFolder}/scripts/setupLocalDevNet"
+            "command": "${workspaceFolder}/scripts/connectToLocalNet"
+        },
+        {
+            "label": "connectToDevNet",
+            "type": "shell",
+            "command": "solana config set --url https://api.devnet.solana.com"
         },
         {
             "label": "createWallet",

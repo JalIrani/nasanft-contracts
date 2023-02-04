@@ -2,3 +2,4 @@ scripts/wallets/*
 target/
 .cache/
 Cargo.lock
+test-ledger/

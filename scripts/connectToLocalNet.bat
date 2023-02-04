@@ -1,8 +1,6 @@
 @ECHO OFF
-solana-test-validator
-solana config set --url localhost
-
-solana config set --url https://api.devnet.solana.com
+CALL solana config set --url localhost
+START solana-test-validator
 
 echo For best results CLI version should be same as Cluster version
 
@@ -16,4 +14,4 @@ rem rem set clusterVersion variable to the result of the command to get the clus
 FOR /F "tokens=* USEBACKQ" %%F IN (`solana cluster-version`) DO (
 SET clusterVersion=%%F
 )
-echo Cluster Version: %cliVersion%
+echo Cluster Version: %clusterVersion%
