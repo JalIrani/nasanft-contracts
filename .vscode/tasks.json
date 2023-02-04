@@ -52,7 +52,7 @@
         {
             "label": "addSol",
             "type": "shell",
-            "command": "${workspaceFolder}/scripts/addSol ${input:walletName}",
+            "command": "${workspaceFolder}/scripts/addSol ${input:walletName} ${input:amountOfSol}",
             "problemMatcher": []
         }
     ],
@@ -74,6 +74,13 @@
             "description": "If --not-default specified this wallet will not be specified as the default wallet. Otherwise it will be set as the default wallet",
             "default": "",
             "options": ["", "--not-default"],
+            "type": "pickString"
+        },
+        {
+            "id": "amountOfSol",
+            "description": "The amount of SOL to add to the wallet",
+            "default": "1",
+            "options": ["1", "5", "25", "50", "100"],
             "type": "pickString"
         }
     ],
