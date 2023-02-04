@@ -1,0 +1,75 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "options": {
+        "env": {
+            "home": "${workspaceFolder}"
+        }
+    },
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cargo-build-bpf"
+        },
+        {
+            "label": "deploy",
+            "dependsOn": "build",
+            "type": "shell",
+            "command": "solana program deploy ${workspaceFolder}/target/deploy/nasaft.so",
+        },
+        {
+            "label": "installSolanaCLI",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/install ${input:installerDir}"
+        },
+        {
+            "label": "setupLocalDevNet",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/setupLocalDevNet"
+        },
+        {
+            "label": "createWallet",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/createWallet ${input:walletName} ${input:defaultWallet}"
+        },
+        {
+            "label": "setDefaultWallet",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/"
+        }
+        {
+            "label": "getPublicAddress",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/getPubAddress ${input:walletName}"
+        },
+        {
+            "label": "addSol",
+            "type": "shell",
+            "command": "${workspaceFolder}/scripts/addSol ${input:walletName}",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "walletName",
+            "description": "Name of your wallet",
+            "default": "0",
+            "type": "promptString"
+        },
+        {
+            "id": "installerDir",
+            "description": "Temporary location to store the installer",
+            "default": "C:\\solana-install-tmp\\solana-install-init.exe v1.14.13",
+            "type": "promptString"
+        },
+        {
+            "id": "defaultWallet",
+            "description": "If --not-default specified this wallet will not be specified as the default wallet. Otherwise it will be set as the default wallet",
+            "default": "",
+            "options": ["", "--not-default"],
+            "type": "pickString"
+        }
+    ],
+}
