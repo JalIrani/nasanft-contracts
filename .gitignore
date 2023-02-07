@@ -1,5 +1,11 @@
 scripts/wallets/*
-target/
-.cache/
+target
+.cache
 Cargo.lock
-test-ledger/
+yarn.lock
+test-ledger
+.anchor
+.DS_Store
+**/*.rs.bk
+node_modules
+.yarn
