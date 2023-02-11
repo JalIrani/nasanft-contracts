@@ -1,11 +1,12 @@
-scripts/wallets/*
-target
-.cache
-Cargo.lock
-yarn.lock
-test-ledger
-.anchor
-.DS_Store
-**/*.rs.bk
 node_modules
-.yarn
+.env
+coverage
+coverage.json
+typechain
+typechain-types
+package-lock.json
+
+# Hardhat files
+cache
+artifacts
+
