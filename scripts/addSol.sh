@@ -1,11 +1,11 @@
 #!/bin/sh
-if [ -z "$1" ]; then
+if [ -z "$1" ];
 	echo No wallet name has been specified.
 	exit 1
 fi
 
-. $(dirname "$0")/setEnv.sh
+$(dirname "$0")setEnv
 #set pubKey variable to the result of the command to get the public address
-pubkey=`solana-keygen pubkey $walletsDir/$1.json`
+pubkey = `solana-keygen pubkey %walletsDir%/%1.json`
 
-solana airdrop $2 $pubkey
+solana airdrop $2 $pubkey --url https://api.devnet.solana.com
