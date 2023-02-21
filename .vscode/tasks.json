@@ -18,6 +18,11 @@
             "label": "install",
             "type": "shell",
             "command": "npm install"
+        },
+        {
+            "label": "deployTestNet",
+            "type": "shell",
+            "command": "npx hardhat run scripts/deploy.ts --network polygon_mumbai"
         }
     ]
 }
