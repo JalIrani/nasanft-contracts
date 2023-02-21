@@ -1,10 +1,9 @@
 import { NasaFT } from "../typechain-types";
 
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import { expect } from "chai";
+import { ethers } from "hardhat";
 const zeroAddress = "0x0000000000000000000000000000000000000000";
-const notOwnerError =
-  "Only the contract owner can perform this operation. This transaction will be reverted.";
+const notOwnerError ="Only the contract owner can perform this operation. This transaction will be reverted.";
 
 describe("NasaFT", function () {
   it("Should get the correct id of the newly minted tokens", async () => {

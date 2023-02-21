@@ -8,6 +8,11 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    
+env:
+  #Add dummy private key and url since for testing localhost network will be used
+  PRIVATE_KEY: '0000000000000000000000000000000000000000000000000000000000000000'
+  API_URL: ''
 
 jobs:
   build:
