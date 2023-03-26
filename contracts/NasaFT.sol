@@ -34,6 +34,10 @@ contract NasaFT is ERC1155 {
         _mint(contractOwner, id, copies, "");
     }
 
+    function burnTokens(address from, uint256 id, uint256 copies) external mustBeContractOwner {
+        _burn(from, id, copies);
+    }
+
     /**
      * @dev See {ERC1155-safeTransferFrom}.
      * Overridden to make it a contract owner only operation.

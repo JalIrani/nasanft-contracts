@@ -119,6 +119,24 @@ describe("NasaFT", function () {
         .balanceOfBatch([owner.address, otherAccount.address], [0, 1, 2, 3])
     ).to.be.revertedWith(notOwnerError);
   });
+  it("Should be able to burn tokens", async () => {
+    const { nasaFT, owner, otherAccount } = await deployContract();
+    // Owner Minting
+    await expect(nasaFT.mintTokens(0, 45))
+      .to.emit(nasaFT, "TransferSingle")
+      .withArgs(owner.address, zeroAddress, owner.address, 0, 45);
+      
+    // Owner Single balance check
+    expect(await nasaFT.balanceOf(owner.address, 0)).to.equal(45);
+    
+    // Burn Tokens
+    await expect(nasaFT.burnTokens(owner.address, 0, 45))
+      .to.emit(nasaFT, "TransferSingle")
+      .withArgs(owner.address, owner.address, zeroAddress, 0, 45);
+
+    // Owner Single balance check
+    expect(await nasaFT.balanceOf(owner.address, 0)).to.equal(0);
+  });
 });
 
 async function deployContract() {
