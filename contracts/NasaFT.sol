@@ -10,7 +10,6 @@ import "hardhat/console.sol";
 //TODO: if we want all accounts that own a certain
 contract NasaFT is ERC1155 {
     address payable public contractOwner;
-    uint256 nextId;
 
     constructor() ERC1155("https://game.example/api/item/") {
         contractOwner = payable(msg.sender);
@@ -31,8 +30,12 @@ contract NasaFT is ERC1155 {
     /**
      * @dev This allows the owner to mint tokens externally
      */
-    function mintTokens(uint256 copies) external mustBeContractOwner {
-        _mint(contractOwner, nextId++, copies, "");
+    function mintTokens(uint256 id, uint256 copies) external mustBeContractOwner {
+        _mint(contractOwner, id, copies, "");
+    }
+
+    function burnTokens(address from, uint256 id, uint256 copies) external mustBeContractOwner {
+        _burn(from, id, copies);
     }
 
     /**
