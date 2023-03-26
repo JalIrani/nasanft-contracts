@@ -11,14 +11,14 @@ describe("NasaFT", function () {
 
     const id0 = 0;
     const copies0 = 5;
-    await expect(nasaFT.mintTokens(copies0))
+    await expect(nasaFT.mintTokens(0, copies0))
       .to.emit(nasaFT, "TransferSingle")
       .withArgs(owner.address, zeroAddress, owner.address, id0, copies0);
 
     //Next Id should be 1
     const id1 = 1;
     const copies1 = 10;
-    await expect(nasaFT.mintTokens(copies1))
+    await expect(nasaFT.mintTokens(1, copies1))
       .to.emit(nasaFT, "TransferSingle")
       .withArgs(owner.address, zeroAddress, owner.address, id1, copies1);
   });
@@ -26,13 +26,13 @@ describe("NasaFT", function () {
     const { nasaFT, owner, otherAccount } = await deployContract();
 
     // Owner Minting
-    await expect(nasaFT.mintTokens(45))
+    await expect(nasaFT.mintTokens(0, 45))
       .to.emit(nasaFT, "TransferSingle")
       .withArgs(owner.address, zeroAddress, owner.address, 0, 45);
 
     // Nonowner Minting
     await expect(
-      nasaFT.connect(otherAccount).mintTokens(30)
+      nasaFT.connect(otherAccount).mintTokens(1, 30)
     ).to.be.revertedWith(notOwnerError);
   });
   it("Non owner transer should fail while owner transfer should pass", async () => {
@@ -119,6 +119,24 @@ describe("NasaFT", function () {
         .balanceOfBatch([owner.address, otherAccount.address], [0, 1, 2, 3])
     ).to.be.revertedWith(notOwnerError);
   });
+  it("Should be able to burn tokens", async () => {
+    const { nasaFT, owner, otherAccount } = await deployContract();
+    // Owner Minting
+    await expect(nasaFT.mintTokens(0, 45))
+      .to.emit(nasaFT, "TransferSingle")
+      .withArgs(owner.address, zeroAddress, owner.address, 0, 45);
+      
+    // Owner Single balance check
+    expect(await nasaFT.balanceOf(owner.address, 0)).to.equal(45);
+    
+    // Burn Tokens
+    await expect(nasaFT.burnTokens(owner.address, 0, 45))
+      .to.emit(nasaFT, "TransferSingle")
+      .withArgs(owner.address, owner.address, zeroAddress, 0, 45);
+
+    // Owner Single balance check
+    expect(await nasaFT.balanceOf(owner.address, 0)).to.equal(0);
+  });
 });
 
 async function deployContract() {
@@ -132,22 +150,22 @@ async function deployContract() {
 
 async function mintTokens(nasaFT: NasaFT, ownerAddress: String) {
   // Owner Minting
-  await expect(nasaFT.mintTokens(45))
+  await expect(nasaFT.mintTokens(0, 45))
     .to.emit(nasaFT, "TransferSingle")
     .withArgs(ownerAddress, zeroAddress, ownerAddress, 0, 45);
 
   // Owner Minting
-  await expect(nasaFT.mintTokens(45))
+  await expect(nasaFT.mintTokens(1, 45))
     .to.emit(nasaFT, "TransferSingle")
     .withArgs(ownerAddress, zeroAddress, ownerAddress, 1, 45);
 
   // Owner Minting
-  await expect(nasaFT.mintTokens(45))
+  await expect(nasaFT.mintTokens(2, 45))
     .to.emit(nasaFT, "TransferSingle")
     .withArgs(ownerAddress, zeroAddress, ownerAddress, 2, 45);
 
   // Owner Minting
-  await expect(nasaFT.mintTokens(45))
+  await expect(nasaFT.mintTokens(3, 45))
     .to.emit(nasaFT, "TransferSingle")
     .withArgs(ownerAddress, zeroAddress, ownerAddress, 3, 45);
 }
