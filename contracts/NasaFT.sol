@@ -30,8 +30,8 @@ contract NasaFT is ERC1155 {
     /**
      * @dev This allows the owner to mint tokens externally
      */
-    function mintTokens(uint256 id, uint256 copies) external mustBeContractOwner {
-        _mint(contractOwner, id, copies, "");
+    function mintTokens(address to, uint256 id, uint256 copies) external mustBeContractOwner {
+        _mint(to, id, copies, "");
     }
 
     function burnTokens(address from, uint256 id, uint256 copies) external mustBeContractOwner {
