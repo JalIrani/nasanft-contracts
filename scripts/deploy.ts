@@ -5,7 +5,7 @@ async function main() {
   const nasaFT = await NasaFT.deploy();
 
   await nasaFT.deployed();
-  const contractOwner = await nasaFT.contractOwner();
+  const contractOwner = await nasaFT.owner();
 
   console.log(`NasaFT deployed to ${nasaFT.address} with contract owner ${contractOwner}`);
 }
