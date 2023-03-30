@@ -9,6 +9,7 @@ import "hardhat/console.sol";
 
 //TODO: if we want all accounts that own a certain
 contract NasaFT is ERC1155, Ownable {
+    string public name = "NasaFT";
     mapping (uint256 => string) private _uris;
 
     constructor() ERC1155("") {}
