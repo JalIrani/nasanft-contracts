@@ -2,39 +2,25 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 // Uncomment this line to use console.log
 import "hardhat/console.sol";
 
 //TODO: if we want all accounts that own a certain
-contract NasaFT is ERC1155 {
-    address payable public contractOwner;
+contract NasaFT is ERC1155, Ownable {
+    mapping (uint256 => string) private _uris;
 
-    constructor() ERC1155("https://game.example/api/item/") {
-        contractOwner = payable(msg.sender);
-    }
-
-    /**
-     * @dev This can be added to the signiture of functions that can only
-     * be called by the contract owner.
-     */
-    modifier mustBeContractOwner() {
-        require(
-            msg.sender == contractOwner,
-            "Only the contract owner can perform this operation. This transaction will be reverted."
-        );
-        _;
-    }
+    constructor() ERC1155("") {}
 
     /**
      * @dev This allows the owner to mint tokens externally
      */
-    function mintTokens(address to, uint256 id, uint256 copies) external mustBeContractOwner {
+    function mintTokens(address to, uint256 id, uint256 copies) external onlyOwner {
         _mint(to, id, copies, "");
     }
 
-    function burnTokens(address from, uint256 id, uint256 copies) external mustBeContractOwner {
+    function burnTokens(address from, uint256 id, uint256 copies) external onlyOwner {
         _burn(from, id, copies);
     }
 
@@ -48,7 +34,7 @@ contract NasaFT is ERC1155 {
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public virtual override mustBeContractOwner {
+    ) public virtual override onlyOwner {
         _safeTransferFrom(from, to, id, amount, data);
     }
 
@@ -62,26 +48,28 @@ contract NasaFT is ERC1155 {
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public virtual override mustBeContractOwner {
+    ) public virtual override onlyOwner {
         _safeBatchTransferFrom(from, to, ids, amounts, data);
+    }
+
+    function setUri(uint256 id, string memory tokenUri) public onlyOwner
+    {
+        require(bytes(_uris[id]).length == 0, "The uri for this token has already been set");
+        _uris[id] = tokenUri;
     }
 
     /**
      * @dev See {ERC1155-safeBatchTransferFrom}.
-     * Overridden to make it a contract owner only operation.
+     * Overridden to return uri from map
      */
     function uri(uint256 id)
         public
         view
         virtual
         override
-        mustBeContractOwner
         returns (string memory)
     {
-        return
-            string(
-                abi.encodePacked(super.uri(id), Strings.toString(id), ".json")
-            );
+        return _uris[id];
     }
 
     /**
@@ -93,7 +81,7 @@ contract NasaFT is ERC1155 {
         view
         virtual
         override
-        mustBeContractOwner
+        onlyOwner
         returns (uint256)
     {
         return super.balanceOf(account, id);
@@ -108,7 +96,7 @@ contract NasaFT is ERC1155 {
         view
         virtual
         override
-        mustBeContractOwner
+        onlyOwner
         returns (uint256[] memory)
     {
         return super.balanceOfBatch(accounts, ids);
