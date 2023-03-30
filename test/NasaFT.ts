@@ -3,7 +3,8 @@ import { NasaFT } from "../typechain-types";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 const zeroAddress = "0x0000000000000000000000000000000000000000";
-const notOwnerError ="Only the contract owner can perform this operation. This transaction will be reverted.";
+const notOwnerError ="Ownable: caller is not the owner";
+const setUriError = "The uri for this token has already been set";
 
 describe("NasaFT", function () {
   it("Should get the correct id of the newly minted tokens", async () => {
@@ -136,6 +137,21 @@ describe("NasaFT", function () {
 
     // Owner Single balance check
     expect(await nasaFT.balanceOf(owner.address, 0)).to.equal(0);
+  });
+  it("Should be able to set uri only once and get uri.", async () => {
+    const { nasaFT, owner, otherAccount } = await deployContract();
+    // Owner Minting
+    await expect(nasaFT.mintTokens(owner.address, 0, 45))
+      .to.emit(nasaFT, "TransferSingle")
+      .withArgs(owner.address, zeroAddress, owner.address, 0, 45);
+      
+    // setUrl
+    expect(await nasaFT.setUri(0, "test uri")).not.to.be.reverted;
+
+    await expect(nasaFT.setUri(0, "test uri again")).to.be.revertedWith(setUriError);
+
+    // Owner Single balance check
+    expect(await nasaFT.uri(0)).to.equal("test uri");
   });
 });
 
