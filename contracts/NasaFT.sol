@@ -9,16 +9,22 @@ import "hardhat/console.sol";
 
 //TODO: if we want all accounts that own a certain
 contract NasaFT is ERC1155, Ownable {
-    string public name = "NasaFT";
     mapping (uint256 => string) private _uris;
+    string private _contractUri;
 
     constructor() ERC1155("") {}
 
     /**
      * @dev This allows the owner to mint tokens externally
      */
-    function mintTokens(address to, uint256 id, uint256 copies) external onlyOwner {
-        _mint(to, id, copies, "");
+    function mintTokens(uint256 id, uint256 copies, string memory tokenUri) external onlyOwner {
+        _mint(owner(), id, copies, "");
+        //If Uri hasnt been set yet
+        if (bytes(_uris[id]).length == 0)
+        {
+            _uris[id] = tokenUri;
+            emit UriUpdated(id, tokenUri);
+        }
     }
 
     function burnTokens(address from, uint256 id, uint256 copies) external onlyOwner {
@@ -53,12 +59,6 @@ contract NasaFT is ERC1155, Ownable {
         _safeBatchTransferFrom(from, to, ids, amounts, data);
     }
 
-    function setUri(uint256 id, string memory tokenUri) public onlyOwner
-    {
-        require(bytes(_uris[id]).length == 0, "The uri for this token has already been set");
-        _uris[id] = tokenUri;
-    }
-
     /**
      * @dev See {ERC1155-safeBatchTransferFrom}.
      * Overridden to return uri from map
@@ -71,6 +71,13 @@ contract NasaFT is ERC1155, Ownable {
         returns (string memory)
     {
         return _uris[id];
+    }
+
+    /**
+     * Returns the hash where the contact metadata is stored
+     */
+    function contractURI() public pure returns (string memory) {
+        return "QmP7kVy88XyRD2JJpBrSPxhnG9YB2sViqdZqey5aKdFL1W";
     }
 
     /**
@@ -102,4 +109,6 @@ contract NasaFT is ERC1155, Ownable {
     {
         return super.balanceOfBatch(accounts, ids);
     }
+
+    event UriUpdated(uint256 id, string uri);
 }
