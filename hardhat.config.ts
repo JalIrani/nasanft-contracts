@@ -1,4 +1,4 @@
-import { HardhatUserConfig } from "hardhat/config";
+import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname+'/.env' });
@@ -13,7 +13,7 @@ task("unpin", "Unpins all pinata metadata", async () => {
   for await (const pin of pinata.getFilesByCount({status: "pinned"}))
   {
     try {
-      await pinata.unpin(pin.ipfs_pin_hash);
+      await pinata.unpin((pin as PinataPin).ipfs_pin_hash);
     }
     catch(error) {
       console.log(error);
@@ -23,7 +23,7 @@ task("unpin", "Unpins all pinata metadata", async () => {
 
 task("pin", "Pins the contract metadata and prints ipfs hash", async (args, hre) => {
   const pinata = new PinataClient({ pinataApiKey: PINATA_API_KEY, pinataSecretApiKey: PINATA_API_SECRET});
-  const owner = new hre.ethers.Wallet(PRIVATE_KEY);
+  const owner = new hre.ethers.Wallet(PRIVATE_KEY!);
   const IMAGE_PATH = path.join(__dirname, "NasaFTLogo.png");
   const image = await pinata.pinFromFS(IMAGE_PATH);
   const CONTRACT_METADATA = {
