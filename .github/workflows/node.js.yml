@@ -34,3 +34,8 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npx hardhat test
+    - name: "Upload ABI file"
+      uses: actions/upload-artifact@v3
+      with: 
+        name: NasaFT.json
+        path: artifacts/contracts/NasaFT.sol
