@@ -35,7 +35,7 @@ describe("NasaFT", function () {
       nasaFT.connect(otherAccount).mintTokens(1, 30, "uri")
     ).to.be.revertedWith(notOwnerError);
   });
-  it("Non owner tranfser should fail while owner transfer should pass", async () => {
+  it("Non owner transfer should fail while owner transfer should pass", async () => {
     const { nasaFT } = await deployContract();
     const [owner, one, two, three] = await ethers.getSigners();
 
@@ -144,7 +144,7 @@ describe("NasaFT", function () {
       .to.emit(nasaFT, "UriUpdated")
       .withArgs(0, "test uri");
 
-    await expect(nasaFT.mintTokens(0, 45, "test uri"))
+    await expect(nasaFT.mintTokens(0, 45, "not test uri"))
       .to.emit(nasaFT, "TransferSingle")
       .withArgs(owner.address, zeroAddress, owner.address, 0, 45)
       .not.to.emit(nasaFT, "UriUpdated");
